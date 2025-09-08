@@ -1,0 +1,24 @@
+services:
+  webapp:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./app:/app
+    environment:
+      PYTHONUNBUFFERED: 1
+      FLASK_ENV: development
+
+  redis:
+    image: redis:alpine
+
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - type: bind
+        source: ./nginx.conf
+        target: /etc/nginx/nginx.conf
+    depends_on:
+      - webapp
+    ports:
+      - "4000:4000"
