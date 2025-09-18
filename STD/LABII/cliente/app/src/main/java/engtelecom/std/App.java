@@ -8,6 +8,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class App {
 
@@ -27,11 +28,19 @@ public class App {
             DataOutputStream saida = new DataOutputStream(conexao.getOutputStream());
 
             // Comunicação
-            saida.writeBytes("C > Oi, sou o cliente\n");
-            saida.flush();
+            String recebido;
+            Scanner teclado = new Scanner(System.in);
+            String escritaCliente;
 
-            String recebido = entrada.readLine();
-            System.out.println("S > " + recebido);
+            do{
+                System.out.print("> ");
+                escritaCliente = teclado.nextLine();
+                saida.writeBytes(escritaCliente + "\n");
+                saida.flush();
+
+                recebido = entrada.readLine();
+                System.out.println(recebido);
+            }while(!escritaCliente.equals("sair"));
 
 
         }catch(IOException e){
