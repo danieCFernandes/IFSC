@@ -19,21 +19,13 @@ public class App {
 
         try (ServerSocket servidor = new ServerSocket(1234)) {
 
-            Socket cliente = servidor.accept();
-            System.out.println("Cliente conectado: " + cliente.getInetAddress());
+            while (true){
+                Socket cliente = servidor.accept();
 
-            // Estabelecimento dos fluxos de entrada e saída
-            BufferedReader entrada = new BufferedReader(new InputStreamReader(cliente.getInputStream(), "UTF-8"));
-            DataOutputStream saida = new DataOutputStream(cliente.getOutputStream());
+                Thread atendimento = new Thread(new AtenderCliente(cliente));
 
-            // Comunicação
-            String recebido;
-
-            do {
-                recebido = entrada.readLine();
-                System.out.println("C > " + recebido);
-                saida.writeBytes("S > " + recebido.toUpperCase() + "\n");
-            } while(!recebido.equals("sair"));
+                atendimento.start();
+            }
 
         }catch (IOException e){
             System.err.println("Erro ao iniciar o servidor: " + e.getMessage());
