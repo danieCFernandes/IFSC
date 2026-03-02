@@ -3,19 +3,23 @@ import matplotlib.pyplot as plt
 import numpy as np
 import komm
 
-st.header("Exercício 3")
+st.header("Exercício 4")
+cols = st.columns(2)
 
-fa = 8.0
+D = 0.1  # Duração do sinal [s]
+with cols[0]:
+    fa = st.slider(label="Taxa de amostragem $f_a$", min_value = 1e3, max_value=20e3, step=500.0,value=8e3, format="%g amostras/s")  # Taxa de amostragem
 Ta = 1 / fa
-L = 8
-Δ = 1.0
-dt = 1e-3
+with cols[1]:   
+    L = st.select_slider(label="Número de níveis de quantização:", options=[2, 4, 8, 16, 32, 64, 128, 256])
+Δ = 2 / L
+dt = 10e-6
 
 tabs = st.tabs(["Curva entrada x saída", "Sinais", "Tabela"])
 
 # Mensagem
-ts = np.arange(0.0, 1.0, step=dt)
-x_t = 5.0 * np.sin(2*np.pi*ts)
+ts = np.arange(0.0, D, step=dt)
+x_t = np.sin(2*np.pi*50*ts)
 
 x_n = komm.sampling_rate_compress(x_t, int(Ta / dt))
 ns = np.arange(x_n.size)
